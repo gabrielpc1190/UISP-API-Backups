@@ -34,4 +34,4 @@ else
 fi
 
 #Delete the backup on the server...
-#curl -X DELETE "https://$UISPHOST/nms/api/v2.1/nms/backups/$BACKUPID" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN"
+curl -s -X DELETE "https://$UISPHOST/nms/api/v2.1/nms/backups/$BACKUPID" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN"
