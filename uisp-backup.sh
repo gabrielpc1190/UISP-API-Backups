@@ -3,11 +3,11 @@
 echo "Assigning variables:"
 XAUTHTOKEN='da6fa1cc-2b36-4520-8a80-98989c81f4c9'
 echo XAUTHTOKEN is $XAUTHTOKEN
-BACKUPFOLDER=/home/gabriel/backups
+BACKUPFOLDER=/home/user/backups
 echo BACKUPFOLDER is $BACKUPFOLDER
 OUTPUTFILE=$BACKUPFOLDER/uisp-backup-$(date +"%Y_%m_%d_%I_%M_%p").uisp
 echo OUTPUTFILE is "$OUTPUTFILE"
-UISPHOST='desarrollo.reycom.soporte101.com'
+UISPHOST='uisphost.com'
 echo UISPHOST is $UISPHOST
 SLEEP=5m
 
