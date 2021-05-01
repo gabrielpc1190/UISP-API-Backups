@@ -30,5 +30,8 @@ if [ -n "$(find "$OUTPUTFILE" -prune -size +1000000c)" ]; then
 	echo "If the download was succesful, here's the detail of the file downloaded:"
 	ls -lh "$OUTPUTFILE"
 else
-	echo "Sorry, there was an error on the execution..."
+	echo "Sorry, there was an error on the execution... you may have to increase the sleep time..."
 fi
+
+#Delete the backup on the server...
+#curl -X DELETE "https://$UISPHOST/nms/api/v2.1/nms/backups/$BACKUPID" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN"
