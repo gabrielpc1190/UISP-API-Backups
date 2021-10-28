@@ -43,3 +43,6 @@ fi
 
 #Delete the backup on the server...
 curl -s -X DELETE "https://$UISPHOST/nms/api/v2.1/nms/backups/$BACKUPID" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN"
+
+#Delete local backups older than 7 days:
+find "$BACKUPFOLDER" -maxdepth 1 -type f -mtime +7 -mtime -31 -name '*.uisp' -ls -exec rm {} \;
