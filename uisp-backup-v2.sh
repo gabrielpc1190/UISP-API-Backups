@@ -1,13 +1,15 @@
 #!/bin/sh
 #Set API-Auth-Token values:
 echo "Assigning variables:"
-XAUTHTOKEN='a9casda9-4fg6-1bn8-bzx3-757f05h84d62'
+XAUTHTOKEN='a9c27269-ef6a-464c-b412-757f96f84d62'
 echo XAUTHTOKEN is $XAUTHTOKEN
-BACKUPFOLDER=/home/user/unms-backups
+BACKUPFOLDER=/home/gabriel/unms-backups
 echo BACKUPFOLDER is $BACKUPFOLDER
-OUTPUTFILE=$BACKUPFOLDER/uisp-backup-$(date +"%Y_%m_%d_%I_%M_%p").uisp
+OUTPUTFILENAME=uisp-backup-$(date +"%Y_%m_%d_%I_%M_%p").uisp
+OUTPUTFILE=$BACKUPFOLDER/$OUTPUTFILENAME
 echo OUTPUTFILE is "$OUTPUTFILE"
-UISPHOST='myuispserver.local'
+UISPHOST='unms.reycom.soporte101.com'
+B2BUCKET='REYCOM-UISP'
 echo UISPHOST is $UISPHOST
 SLEEP=10m
 
@@ -24,11 +26,17 @@ echo "Ok, wake up! and lets check if the backup is ready to be downloaded..."
 
 #Get the Backup file from UISP using the API and API-Auth-Token from UNMS:
 #curl -X GET "https://$UISPHOST/nms/api/v2.1/nms/backups/$BACKUPID" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN" --output "$OUTPUTFILE"
+
+#Getting the backup file by scp from the UNMS host:
 scp root@10.10.1.8:/home/unms/data/unms-backups/backups/*manual* $OUTPUTFILE
+OUTPUTFILESHA1SUM=`sha1sum $OUTPUTFILE | awk '{print $1}'`
+echo $OUTPUTFILESHA1SUM
 
 if [ -n "$(find "$OUTPUTFILE" -prune -size +1000000c)" ]; then
 	echo "If the download was succesful, here's the detail of the file downloaded:"
 	ls -lh "$OUTPUTFILE"
+	echo "Now we're going to upload the file to Backblaze B2 Bucket $B2BUCKET ..."
+	b2 upload-file --sha1 "$OUTPUTFILESHA1SUM" $B2BUCKET $OUTPUTFILE $OUTPUTFILENAME
 else
 	echo "Sorry, there was an error on the execution... you may have to increase the sleep time..."
 fi
