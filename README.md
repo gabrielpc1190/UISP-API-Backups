@@ -1,4 +1,4 @@
-# UISP-API-Backups
+# UISP-Backup-Using-API
 Little script to backup your UISP server from a bash script using the UISP API v2.1
 
 There are two versions of the script:
