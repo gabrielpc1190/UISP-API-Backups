@@ -68,3 +68,4 @@ fi
 
 #Delete the backup on the $UISPHOST server:
 curl -k -s -X DELETE "https://$UISPHOST/nms/api/v2.1/nms/backups/$BACKUPID" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN"
+echo "Done!"
