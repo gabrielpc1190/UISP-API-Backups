@@ -2,7 +2,7 @@
 #Make sure to have curl jq installed for this to work.
 #Set API-Auth-Token values:
 echo "Assigning variables:"
-XAUTHTOKEN="0sa5c98-3032-a243-a35j-65aa134006ad"
+XAUTHTOKEN="0112233-xxaa-xxaa-xxaa-001122334455"
 echo XAUTHTOKEN is $XAUTHTOKEN
 BACKUPFOLDER="/home/unms-backups"
 echo BACKUPFOLDER is $BACKUPFOLDER
