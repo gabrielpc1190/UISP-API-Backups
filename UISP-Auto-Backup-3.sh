@@ -21,24 +21,25 @@ BACKUPID=$(curl -k -s -X POST "https://$UISPHOST/nms/api/v2.1/nms/backups/create
 echo "Done, the BACKUPID is $BACKUPID. Now lets wait until the backup gets generated, maybe $SLEEP will be enough?, lets try..."
 sleep $SLEEP
 
-BACKUPSTATE=$(curl -k -s -X GET "https://$UISPHOST/nms/api/v2.1/nms/backups" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN" | grep -oP "success|in-progress")
+BACKUPSTATE=$(curl -k -s -X GET "https://$UISPHOST/nms/api/v2.1/nms/backups" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN" | jq -r '.[] | select(.id== "'$BACKUPID'") | .state')
 echo $BACKUPSTATE
 #Let's wait until the backup gets generated:
 until [ "$BACKUPSTATE" = "success" ]
 do
   echo "Backup is not completed yet, lets wait $SLEEP and try again..."
   sleep $SLEEP
-  BACKUPSTATE=$(curl -k -s -X GET "https://$UISPHOST/nms/api/v2.1/nms/backups" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN" | grep -oP "success|in-progress")
+  BACKUPSTATE=$(curl -k -s -X GET "https://$UISPHOST/nms/api/v2.1/nms/backups" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN" | jq -r '.[] | select(.id== "'$BACKUPID'") | .state')
   echo $BACKUPSTATE
 done
 echo "Backup is completed, lets download the backup file to $OUTPUTFILE"
 
 #Get the Backup file from UISP using the API and API-Auth-Token from UNMS:
-#curl -X GET "https://$UISPHOST/nms/api/v2.1/nms/backups/$BACKUPID" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN" --output "$OUTPUTFILE"
-#Getting the backup file by scp from the UNMS host:
+curl -k -s -X GET "https://$UISPHOST/nms/api/v2.1/nms/backups/$BACKUPID" -H "accept: application/json" -H "x-auth-token: $XAUTHTOKEN" --output "$OUTPUTFILE"
 
-echo "Let's get the backup by scp into the $UISPHOST"
-scp root@$UISPHOST:/home/unms/data/unms-backups/backups/*manual* $OUTPUTFILE
+#Getting the backup file by scp from the UNMS host:
+#echo "Let's get the backup by scp into the $UISPHOST"
+#scp root@$UISPHOST:/home/unms/data/unms-backups/backups/*manual* $OUTPUTFILE
+
 OUTPUTFILESHA1SUM=`sha1sum $OUTPUTFILE | awk '{print $1}'`
 echo $OUTPUTFILESHA1SUM
 
